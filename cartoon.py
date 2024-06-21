@@ -1,3 +1,28 @@
+import cv2 as cv
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+
+def Cartoon(img_path, resize=0, size=(512, 512), result_folder="result", show=0):
+    # Load the image
+    img = cv.imread(img_path)
+    filename = os.path.splitext(os.path.basename(img_path))[0]
+
+    # Create the result folder if it doesn't exist
+    if not os.path.exists(result_folder):
+        os.makedirs(result_folder)
+
+    # Resize the image if resize flag is set
+    if resize:
+        img = cv.resize(img, size)
+
+    # Convert the image to RGB
+    img_rgb = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+
+    # Convert the image to grayscale
+    gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+    gray = cv.medianBlur(gray, 5)  # Apply median blur
+
     # Apply adaptive threshold to detect edges
     edges = cv.adaptiveThreshold(gray, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 9, 9)
 
@@ -13,8 +38,7 @@
     centers2 = np.uint8(centers2)
     res2 = centers2[labels2.flatten()]
     out2 = res2.reshape(img.shape)
-
-    # Combine images to create cartoon effect
+  # Combine images to create cartoon effect
     result0 = combine_images(color, color, edges)
     result1 = combine_images(result0, out2, edges)
     result2 = combine_images(out2, color, edges)
@@ -35,7 +59,7 @@
         plot_images(result0, result1, result2, gray)
 
 def combine_images(image1, image2, edges):
-    combined_image = cv.bitwise_and(image1, image2, mask=edges)
+ combined_image = cv.bitwise_and(image1, image2, mask=edges)
     return combined_image
 
 def adjust_brightness_contrast(image, brightness=30, contrast=30):
