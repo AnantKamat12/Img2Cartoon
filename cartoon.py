@@ -69,5 +69,5 @@ def plot_images(result0, result1, result2, gray):
 
 # Example usage
 if __name__ == "__main__":
-    img_path = r"C:\Users\91767\OneDrive - National Institute of Technology Karnataka, Surathkal\Pictures\Screenshots\Screenshot 2024-04-23 183728.png"
+    img_path = r"ANY_IMG_PATH"
     Cartoon(img_path, resize=0, show=1)
