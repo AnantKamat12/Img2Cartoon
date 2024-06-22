@@ -38,7 +38,7 @@ def Cartoon(img_path, resize=0, size=(512, 512), result_folder="result", show=0)
     centers2 = np.uint8(centers2)
     res2 = centers2[labels2.flatten()]
     out2 = res2.reshape(img.shape)
-    k = 2 # Number of colors
+    k = 3 # Number of colors
     z = img.reshape((-1, 3))  # Correct the reshape to handle color channels
     z = np.float32(z)
     criteria2 = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 10, 1.5)
