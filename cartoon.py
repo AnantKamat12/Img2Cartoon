@@ -39,7 +39,7 @@ def Cartoon(img_path, resize=0, size=(512, 512), result_folder="result", show=0)
         res = centers[labels.flatten()]
         return res.reshape(img.shape)
 
-    out1 = color_quantization(img, k=2)
+    out1 = color_quantization(img, k=4)
     out2 = color_quantization(img, k=8)
 
     # Combine images to create cartoon effect
