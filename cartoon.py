@@ -30,22 +30,17 @@ def Cartoon(img_path, resize=0, size=(512, 512), result_folder="result", show=0)
     color = cv.bilateralFilter(img, 9, 75, 75)  # Adjust parameters for better performance
 
     # Color quantization using K-means clustering
-    k = 8  # Number of colors
-    z = img.reshape((-1, 3))  # Correct the reshape to handle color channels
-    z = np.float32(z)
-    criteria2 = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 10, 1)
-    ret2, labels2, centers2 = cv.kmeans(z, k, None, criteria2, 10, cv.KMEANS_RANDOM_CENTERS)
-    centers2 = np.uint8(centers2)
-    res2 = centers2[labels2.flatten()]
-    out2 = res2.reshape(img.shape)
-    k = 3 # Number of colors
-    z = img.reshape((-1, 3))  # Correct the reshape to handle color channels
-    z = np.float32(z)
-    criteria2 = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 10, 1.5)
-    ret1, labels1, centers1 = cv.kmeans(z, k, None, criteria2, 10, cv.KMEANS_RANDOM_CENTERS)
-    centers1 = np.uint8(centers1)
-    res1 = centers1[labels1.flatten()]
-    out1= res1.reshape(img.shape)
+    def color_quantization(img, k):
+        z = img.reshape((-1, 3))
+        z = np.float32(z)
+        criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 10, 1.0)
+        ret, labels, centers = cv.kmeans(z, k, None, criteria, 10, cv.KMEANS_RANDOM_CENTERS)
+        centers = np.uint8(centers)
+        res = centers[labels.flatten()]
+        return res.reshape(img.shape)
+
+    out1 = color_quantization(img, k=2)
+    out2 = color_quantization(img, k=8)
 
     # Combine images to create cartoon effect
     result0 = combine_images(color, color, edges)
@@ -74,7 +69,6 @@ def combine_images(image1, image2, edges):
     imag1 = cv.bitwise_or(image1, image2, mask=edges)
     combined_image = cv.bitwise_and(combined_image, imag1, mask=edges)
     return combined_image
-
 
 def adjust_brightness_contrast(image, brightness=30, contrast=30):
     new_image = np.clip((1 + contrast / 127.0) * image - contrast + brightness, 0, 255).astype(np.uint8)
@@ -112,5 +106,6 @@ def plot_images(result0, result1, result2, result8, gray):
 
 # Example usage
 if __name__ == "__main__":
-    img_path = r"C:\Users\91767\OneDrive - National Institute of Technology Karnataka, Surathkal\Pictures\Saved Pictures\IMG_20220801_181936.jpg"
+    img_path = r"YOUR_IMAGE_PATH"
     Cartoon(img_path, resize=0, show=1)
+
